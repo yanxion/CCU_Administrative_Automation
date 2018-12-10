@@ -27,7 +27,7 @@
 - set_yy：工作日期 - 年份
     - ![image](https://i.imgur.com/VPxu76V.png)
 - set_mm：工作日期 - 月份
-    - ![image](https://i.imgur.com/eRhYuzH.png)
+    - ![image](https://i.imgur.com/eRhYuzH.png) 
 - set_dd：兩種寫法
     - 一種搭配set_hrs，兩個的總數要一樣，代表是日期與時間會是相對應的e.g., 1日報4小時，2日報3小時，3日報3小時...類推
       ```json=
