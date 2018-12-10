@@ -45,7 +45,7 @@
         "set_hrs": [4,3,3,4,3,3,4,3,3], //代表要報25小時
     ```
 - set_workin：工作內容，填入工作的內容。
-    - ![image](https://i.imgur.com/24XtyLT.png =300x)
+    - ![image](https://i.imgur.com/24XtyLT.png)
  
 ## 使用方式：
 上述資料填寫完成後，執行exe檔即可自動化輸入。
