@@ -30,6 +30,7 @@ class Log_Manage:
 
     def make_log_number(self):
         self.web.get('https://miswww1.ccu.edu.tw/pt_proj/print_sel.php')
+
         ele = Select(self.web.find_element_by_name('unit_cd1'))
         ele.select_by_value(self.plan_num)
         ele = self.web.find_element_by_name('sy')
@@ -62,6 +63,11 @@ class Log_Manage:
         self.web.find_element_by_xpath('/html/body/form/center/input[2]').click()
         time.sleep(0.5)
         self.web.find_element_by_xpath('/html/body/center/input').click()
+        try:
+            ele = self.web.switch_to.alert
+            ele.accept()
+        except:
+            pass
         
         
     def load_json(self):
@@ -73,20 +79,38 @@ class Log_Manage:
         self.pwd = fjson['pwd']
         self.set_yy = fjson['set_yy']
         self.set_mm = fjson['set_mm']
+        if (fjson['set_hrs'][0] > 4) and (len(fjson['set_hrs']) == 1) :
+            self.set_hrs = self.auto_make_hrs(fjson['set_hrs'][0])
+        else:
+            self.set_hrs = fjson['set_hrs']
         if fjson['set_dd'][0] == 0:
-            self.set_dd = self.auto_make_dd(fjson['set_yy'], fjson['set_mm'], fjson['set_hrs'])
+            self.set_dd = self.auto_make_dd(fjson['set_yy'], fjson['set_mm'], self.set_hrs)
         else:
             self.set_dd = fjson['set_dd']
-        self.set_hrs = fjson['set_hrs']
         self.set_workin = fjson['set_workin']
+
+    def auto_make_hrs(self, hrs):
+        arr_hrs = []
+        while(hrs > 0):
+            if hrs > 4:
+                hrs -= 4
+                arr_hrs.append(4)
+            else:
+                arr_hrs.append(hrs)
+                break
+        return arr_hrs
 
     def auto_make_dd(self, yy, mm, hrs):
         # print (yy, mm, hrs)
         # print(datetime.now().weekday())
-        dd = 1 
+        dd = 1
+        dt = datetime.now()
         datetime_o = datetime.strptime('{0} {1} {2}'.format((1911 + int(yy)), mm, dd), '%Y %m %d')
         # if datetime_o.weekday
-        days_in_month = calendar.monthrange(int(yy), int(mm))[1]
+        if int(mm) == int(dt.month):
+            days_in_month = dt.day - 1
+        else:
+            days_in_month = calendar.monthrange(int(yy), int(mm))[1]
         arr_normal_day = []
 
         for i in range(1, days_in_month + 1, +1):
@@ -94,7 +118,7 @@ class Log_Manage:
             datetime_o = datetime.strptime('{0} {1} {2}'.format((1911 + int(yy)), mm, dd), '%Y %m %d')
             if datetime_o.weekday() in [0,1,2,3,4]:
                 arr_normal_day.append(i)
-        print (arr_normal_day)
+        # print(arr_normal_day)
         arr_dd = random.sample(arr_normal_day, len(hrs))
         return arr_dd
 
